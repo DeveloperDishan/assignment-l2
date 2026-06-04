@@ -1,9 +1,61 @@
-import { createServer, IncomingMessage, type Server } from "http";
+import express, { type Application, type Request, type Response } from "express"
+import { Pool } from 'pg'
+import config from "./config";
 
-const server: Server = createServer((req: IncomingMessage, res) => {
-    console.log();
+const app: Application = express();
+const port = 5000;
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }))
+
+const pool = new Pool({
+    connectionString: config.connection_string
 })
 
-server.listen(5000, () => {
-    console.log("Server is running on port 5000");
+
+
+const initDB = async () => {
+    try {
+
+        await pool.query(`
+               CREATE TABLE IF NOT EXISTS users(
+                id SERIAL PRIMARY KEY,
+                name VARCHAR(100) NOT NULL,
+                email VARCHAR(255) UNIQUE NOT NULL,
+                password TEXT NOT NULL,
+                role VARCHAR(20) DEFAULT 'contributor',
+                created_at TIMESTAMP DEFAULT NOW(),
+                updated_at TIMESTAMP DEFAULT NOW()
+               ); 
+            `)
+        console.log("database connected");
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+initDB();
+app.get("/", (req: Request, res: Response) => {
+    // res.send("Hello world111");
+    res.status(200).json({
+        "message": "Express Server",
+        "author": "Dishan",
+    })
+});
+
+app.post("/", async (req: Request, res: Response) => {
+    // console.log(req.body);
+    const { name, email, password } = req.body;
+
+    res.status(201).json({
+        message: "Created",
+        data: {
+            name,
+            email
+        }
+    })
+})
+
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
 })
