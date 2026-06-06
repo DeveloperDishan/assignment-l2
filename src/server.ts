@@ -3,11 +3,12 @@ import { Pool } from 'pg'
 import config from "./config";
 
 const app: Application = express();
-const port = 5000;
+const port = config.port;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
 
+// neon database connection
 const pool = new Pool({
     connectionString: config.connection_string
 })
@@ -35,6 +36,7 @@ const initDB = async () => {
 }
 
 initDB();
+
 app.get("/", (req: Request, res: Response) => {
     // res.send("Hello world111");
     res.status(200).json({
@@ -43,18 +45,34 @@ app.get("/", (req: Request, res: Response) => {
     })
 });
 
-app.post("/", async (req: Request, res: Response) => {
-    // console.log(req.body);
-    const { name, email, password } = req.body;
 
-    res.status(201).json({
-        message: "Created",
-        data: {
-            name,
-            email
-        }
-    })
+app.post("/api/auth/signup", async (req: Request, res: Response) => {
+    // console.log(req.body);
+    const { name, email, password, role } = req.body;
+
+    try {
+        const result = await pool.query(`
+            INSERT INTO users(name, email, password, role) VALUES($1,$2,$3,COALESCE($4, 'contributor'))
+            RETURNING *
+        `, [name, email, password, role]);
+
+        // console.log(result);
+        res.status(201).json({
+            success: true,
+            message: "User registered successfully",
+            data: result.rows[0]
+        })
+    } catch (error: any) {
+
+        res.status(400).json({
+            success: false,
+            message: error.message,
+            errors: error
+        })
+    }
 })
+
+// app.get('/api/')
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
