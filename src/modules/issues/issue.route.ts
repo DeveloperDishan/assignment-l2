@@ -1,15 +1,19 @@
 import { Router } from "express";
 import { issueController } from "./issue.controller";
+import auth from "../../middlewere/auth";
 
 
 
 const router = Router();
 
+
+
+
 router.post('/', issueController.createIssue);
 
 // get all issues
 
-router.get("/", issueController.getAllIssue);
+router.get("/", auth(), issueController.getAllIssue);
 
 // Get single issue
 

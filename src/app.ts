@@ -4,6 +4,7 @@ import { pool } from "./db";
 import bcrypt from "bcrypt";
 import { userRoute } from "./modules/users/user.route";
 import { issueRoute } from "./modules/issues/issue.route";
+import { authRoute } from "./modules/auth/auth.route";
 
 
 const app: Application = express();
@@ -25,29 +26,8 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.use('/api/auth/signup', userRoute);
-app.use("/api/issues/", issueRoute)
-
-
-
-
-
-// app.get('/api/')
-
-
-// isssue create
-
-// app.post("/api/issues", );
-
-
-
-
-// Get single issue
-
-
-
-
-
-
+app.use("/api/issues/", issueRoute);
+app.use("/api/auth", authRoute);
 
 
 
