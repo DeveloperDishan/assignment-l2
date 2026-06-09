@@ -21,7 +21,7 @@ app.use(express.text());
 app.get("/", (req: Request, res: Response) => {
     // res.send("Hello world111");
     res.status(200).json({
-        "message": "Express Server",
+        "message": "Wellcome To Our Assignmmet",
         "author": "Dishan",
     })
 });

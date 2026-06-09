@@ -139,4 +139,4 @@ npm start
 
 ## Author
 
-Built by Dishanur Rahman 🚀
+Built by Dishanur Rahman ✌️
