@@ -6,8 +6,7 @@ import sendResponse from "../../utility/sendResponse";
 
 
 const createIssue = async (req: Request, res: Response) => {
-    // console.log(req.body);
-    // const { title, description, type, status, reporter_id } = ;
+
 
 
 
@@ -44,7 +43,7 @@ const createIssue = async (req: Request, res: Response) => {
 
 
 const getAllIssue = async (req: Request, res: Response) => {
-    // console.log("controller", req.user);
+
     try {
         const query: IissuesQuery = req.query;
 

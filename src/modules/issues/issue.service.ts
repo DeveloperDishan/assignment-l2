@@ -68,8 +68,14 @@ const getAllIssueIntoDB = async (payload: IissuesQuery) => {
         delete issue.reporter_id;
 
         data.push({
-            ...issue,
+            id: issue.id,
+            title: issue.title,
+            description: issue.description,
+            type: issue.type,
+            status: issue.status,
             reporter: reporterResult.rows[0],
+            created_at: issue.created_at,
+            updated_at: issue.updated_at,
         });
     }
 
@@ -113,8 +119,14 @@ const getSingleIssueIntoDB = async (id: number) => {
     }
 
     const result = {
-        ...issue,
-        reporter,
+        id: issue.id,
+        title: issue.title,
+        description: issue.description,
+        type: issue.type,
+        status: issue.status,
+        reporter: reporter,
+        created_at: issue.created_at,
+        updated_at: issue.updated_at,
     }
     return result;
 
@@ -141,7 +153,7 @@ const updateIssueIntoDB = async (id: number, payload: Iissues, user: IJwtUser) =
 
     // Authorization  korta hobe
 
-    // Maintainer -> any issue
+
     if (user.role === "contributor") {
 
         // own issue only
@@ -183,7 +195,7 @@ const updateIssueIntoDB = async (id: number, payload: Iissues, user: IJwtUser) =
 const deleteIssueIntoDB = async (id: number, user: IJwtUser) => {
 
     if (user.role !== "maintainer") {
-        throw new Error("Forbidden");
+        throw new Error("Forbidden only maintainer can delete");
     }
 
     const result = await pool.query(
