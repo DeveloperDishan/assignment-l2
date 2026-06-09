@@ -25,7 +25,7 @@ const loginUserIntoDB = async (payload: {
     // console.log(user);
 
     const matchPassword = await bcrypt.compare(password, user.password);
-    console.log(matchPassword);
+    // console.log(matchPassword);
     if (!matchPassword) {
         throw new Error("Invalid Credentials!")
     }

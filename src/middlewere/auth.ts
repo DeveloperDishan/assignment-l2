@@ -2,6 +2,7 @@ import type { NextFunction, Request, Response } from "express";
 import jwt, { type JwtPayload } from "jsonwebtoken";
 import config from "../config";
 import { pool } from "../db";
+import type { IJwtUser } from "../modules/users/user.interface";
 
 const auth = () => {
     return async (req: Request, res: Response, next: NextFunction) => {
@@ -20,7 +21,7 @@ const auth = () => {
 
             const decoded = jwt.verify(token as string,
                 config.secret as string
-            ) as JwtPayload;
+            ) as IJwtUser;
 
             ;
             // console.log(decoded);

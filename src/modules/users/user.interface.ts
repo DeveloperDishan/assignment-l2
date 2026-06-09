@@ -4,3 +4,10 @@ export interface IUser {
     password: string;
     role: "contributor" | "maintainer";
 }
+
+export interface IJwtUser {
+    id: number;
+    name: string;
+    email: string;
+    role: "contributor" | "maintainer";
+}

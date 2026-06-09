@@ -1,5 +1,7 @@
 import type { Request, Response } from "express";
 import { issueService } from "./issue.service";
+import type { IJwtUser } from "../users/user.interface";
+import type { IissuesQuery } from "./issue.interface";
 
 
 const createIssue = async (req: Request, res: Response) => {
@@ -10,7 +12,14 @@ const createIssue = async (req: Request, res: Response) => {
 
     try {
 
-        const result = await issueService.createIsssueIntoDB(req.body)
+        const user = req.user as IJwtUser;
+
+        const payload = {
+            ...req.body,
+            reporter_id: user.id
+        };
+
+        const result = await issueService.createIsssueIntoDB(payload)
 
         // console.log(result);
         res.status(201).json({
@@ -19,6 +28,8 @@ const createIssue = async (req: Request, res: Response) => {
             data: result.rows[0]
         })
     } catch (error: any) {
+
+
 
         res.status(404).json({
             success: false,
@@ -30,10 +41,11 @@ const createIssue = async (req: Request, res: Response) => {
 
 
 const getAllIssue = async (req: Request, res: Response) => {
-    console.log("controller", req.user);
+    // console.log("controller", req.user);
     try {
+        const query: IissuesQuery = req.query;
 
-        const result = await issueService.getAllIssueIntoDB(req.query);
+        const result = await issueService.getAllIssueIntoDB(query);
 
         res.status(200).json({
             success: true,
@@ -74,10 +86,11 @@ const getSingleIssue = async (req: Request, res: Response) => {
 const updateIssue = async (req: Request, res: Response) => {
     const id = Number(req.params.id);
     // const { title, description, type } = req.body;
+    const user = req.user as IJwtUser;
 
     try {
 
-        const result = await issueService.updateIssueIntoDB(id, req.body)
+        const result = await issueService.updateIssueIntoDB(id, req.body, user)
 
         //  Response
         return res.status(200).json({
@@ -87,7 +100,10 @@ const updateIssue = async (req: Request, res: Response) => {
         });
 
     } catch (error: any) {
-        return res.status(500).json({
+
+
+
+        return res.status(403).json({
             success: false,
             message: error.message,
             error,
@@ -98,17 +114,18 @@ const updateIssue = async (req: Request, res: Response) => {
 
 const deleteIssue = async (req: Request, res: Response) => {
     const id = Number(req.params.id);
+    const user = req.user as IJwtUser;
 
     try {
 
-        const result = await issueService.deleteIssueIntoDB(id);
+        const result = await issueService.deleteIssueIntoDB(id, user);
         return res.status(200).json({
             success: true,
             message: "Issue deleted successfully",
         });
 
     } catch (error: any) {
-        return res.status(500).json({
+        return res.status(403).json({
             success: false,
             message: error.message,
             error: error,

@@ -1,8 +1,10 @@
 import { error } from "node:console";
 import { pool } from "../../db";
-import { Result } from "pg";
 
-const createIsssueIntoDB = async (payload: any) => {
+import type { Iissues, IissuesQuery } from "./issue.interface";
+import type { IJwtUser, IUser } from "../users/user.interface";
+
+const createIsssueIntoDB = async (payload: Iissues) => {
 
     const { title, description, type, status, reporter_id } = payload
 
@@ -17,7 +19,7 @@ const createIsssueIntoDB = async (payload: any) => {
 }
 
 
-const getAllIssueIntoDB = async (payload: any) => {
+const getAllIssueIntoDB = async (payload: IissuesQuery) => {
 
 
     const { sort = "newest", type, status } = payload;
@@ -119,7 +121,8 @@ const getSingleIssueIntoDB = async (id: number) => {
 }
 
 
-const updateIssueIntoDB = async (id: number, payload: any) => {
+const updateIssueIntoDB = async (id: number, payload: Iissues, user: IJwtUser) => {
+    console.log(user);
 
     const { title, description, type, status } = payload;
 
@@ -134,9 +137,26 @@ const updateIssueIntoDB = async (id: number, payload: any) => {
         throw new Error("Issue not found!");
     }
 
-    // const issue = issueResult.rows[0];
+    const issue = issueResult.rows[0];
 
     // Authorization  korta hobe
+
+    // Maintainer -> any issue
+    if (user.role === "contributor") {
+
+        // own issue only
+        if (issue.reporter_id !== user.id) {
+            throw new Error("Forbidden");
+        }
+
+        // issue must be open
+        if (issue.status !== "open") {
+            throw new Error(
+                "You can update only open issues"
+            );
+        }
+    }
+
 
 
 
@@ -155,12 +175,17 @@ const updateIssueIntoDB = async (id: number, payload: any) => {
         [title, description, type, status, id]
     );
 
-    return result
+    return result;
 
 }
 
 
-const deleteIssueIntoDB = async (id: number) => {
+const deleteIssueIntoDB = async (id: number, user: IJwtUser) => {
+
+    if (user.role !== "maintainer") {
+        throw new Error("Forbidden");
+    }
+
     const result = await pool.query(
         `
             DELETE FROM issues
