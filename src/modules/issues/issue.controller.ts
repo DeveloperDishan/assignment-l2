@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 import { issueService } from "./issue.service";
 import type { IJwtUser } from "../users/user.interface";
 import type { IissuesQuery } from "./issue.interface";
+import sendResponse from "../../utility/sendResponse";
 
 
 const createIssue = async (req: Request, res: Response) => {
@@ -22,20 +23,22 @@ const createIssue = async (req: Request, res: Response) => {
         const result = await issueService.createIsssueIntoDB(payload)
 
         // console.log(result);
-        res.status(201).json({
+
+        sendResponse(res, {
+            statusCode: 201,
             success: true,
             message: "Issue created successfully",
             data: result.rows[0]
         })
     } catch (error: any) {
 
-
-
-        res.status(404).json({
+        sendResponse(res, {
+            statusCode: 404,
             success: false,
             message: error.message,
-            errors: error
+            error: error
         })
+
     }
 }
 
@@ -47,17 +50,23 @@ const getAllIssue = async (req: Request, res: Response) => {
 
         const result = await issueService.getAllIssueIntoDB(query);
 
-        res.status(200).json({
+
+
+        sendResponse(res, {
+            statusCode: 200,
             success: true,
             message: "Issues retrived successfully",
             data: result
-        });
+        })
     } catch (error: any) {
-        res.status(500).json({
+
+
+        sendResponse(res, {
+            statusCode: 500,
             success: false,
             message: error.message,
-            error: error,
-        });
+            error: error
+        })
     }
 }
 
@@ -68,17 +77,21 @@ const getSingleIssue = async (req: Request, res: Response) => {
         const id = Number(req.params.id);
         const result = await issueService.getSingleIssueIntoDB(id)
 
-        res.status(200).json({
+
+        sendResponse(res, {
+            statusCode: 200,
             success: true,
             message: "Issue retrieved successfully",
-            data: result,
-        });
+            data: result
+        })
     } catch (error: any) {
-        res.status(500).json({
+
+        sendResponse(res, {
+            statusCode: 500,
             success: false,
             message: error.message,
-            error: error,
-        });
+            error: error
+        })
     }
 }
 
@@ -93,21 +106,23 @@ const updateIssue = async (req: Request, res: Response) => {
         const result = await issueService.updateIssueIntoDB(id, req.body, user)
 
         //  Response
-        return res.status(200).json({
+
+
+        sendResponse(res, {
+            statusCode: 200,
             success: true,
             message: "Issue updated successfully!",
             data: result.rows[0],
-        });
+        })
 
     } catch (error: any) {
 
-
-
-        return res.status(403).json({
+        sendResponse(res, {
+            statusCode: 403,
             success: false,
             message: error.message,
             error,
-        });
+        })
     }
 }
 
@@ -119,17 +134,22 @@ const deleteIssue = async (req: Request, res: Response) => {
     try {
 
         const result = await issueService.deleteIssueIntoDB(id, user);
-        return res.status(200).json({
+
+
+        sendResponse(res, {
+            statusCode: 200,
             success: true,
             message: "Issue deleted successfully",
-        });
+        })
 
     } catch (error: any) {
-        return res.status(403).json({
+
+        sendResponse(res, {
+            statusCode: 403,
             success: false,
             message: error.message,
             error: error,
-        });
+        })
     }
 }
 
