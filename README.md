@@ -4,6 +4,12 @@ A RESTful API built with Node.js, Express, TypeScript, and PostgreSQL for managi
 
 ---
 
+## Live URL
+
+Backend API: https://your-deployed-url.vercel.app
+Github repo Link :https://github.com/DeveloperDishan/assignment-l2
+Video Link:
+
 ## Features
 
 - User Registration & Login (JWT Authentication)
