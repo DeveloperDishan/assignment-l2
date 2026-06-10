@@ -6,9 +6,9 @@ A RESTful API built with Node.js, Express, TypeScript, and PostgreSQL for managi
 
 ## Live URL
 
-Backend API: https://your-deployed-url.vercel.app
-Github repo Link :https://github.com/DeveloperDishan/assignment-l2
-Video Link:
+- Backend API: https://your-deployed-url.vercel.app
+- Github repo Link :https://github.com/DeveloperDishan/assignment-l2
+- Video Link:https://docs.google.com/document/d/1zo5yjKUrwXaEyQBTOhuJu32eh6YyEsod_P0nm7yQLz8/edit?tab=t.0
 
 ## Features
 
@@ -83,12 +83,12 @@ Authorization: <JWT_TOKEN>
 
 ### Users
 
-- POST `/api/users/register`
+- POST `/api/auth/signup`
 
 ### Issues
 
 - POST `/api/issues` (Protected)
-- GET `/api/issues`
+- GET `/api/issues?sort=newest`(All Issues)
 - GET `/api/issues/:id`
 - PATCH `/api/issues/:id` (Protected + Role check)
 - DELETE `/api/issues/:id` (Maintainer only)
