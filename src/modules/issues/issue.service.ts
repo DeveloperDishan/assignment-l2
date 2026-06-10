@@ -134,7 +134,7 @@ const getSingleIssueIntoDB = async (id: number) => {
 
 
 const updateIssueIntoDB = async (id: number, payload: Iissues, user: IJwtUser) => {
-    console.log(user);
+
 
     const { title, description, type, status } = payload;
 
